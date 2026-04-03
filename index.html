@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktieanalys – Pluggmaterial</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.6; }
+  .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header { margin-bottom: 2rem; }
+  header h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; }
+  header p { font-size: 15px; color: #666; margin-top: 4px; }
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+  .nav-btn { padding: 8px 16px; font-size: 13px; border: 1.5px solid #ddd; border-radius: 8px; background: #fff; color: #555; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .nav-btn:hover { border-color: #1D9E75; color: #1D9E75; }
+  .nav-btn.active { background: #1D9E75; color: #fff; border-color: #1D9E75; font-weight: 500; }
+  .progress-bar { height: 4px; background: #e5e5e5; border-radius: 2px; margin-bottom: 2rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: #1D9E75; border-radius: 2px; transition: width 0.3s; }
+  .chapter { display: none; }
+  .chapter.active { display: block; }
+  h2 { font-size: 22px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+  .card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .card h3 { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 0.5rem; }
+  .card p { font-size: 14px; color: #555; line-height: 1.65; }
+  .formula { background: #f0faf6; border-left: 3px solid #1D9E75; padding: 0.75rem 1rem; margin: 0.75rem 0; font-family: 'Courier New', monospace; font-size: 14px; color: #1a1a1a; border-radius: 0 6px 6px 0; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin-bottom: 10px; letter-spacing: 0.3px; }
+  .tag-green { background: #e1f5ee; color: #0F6E56; }
+  .tag-amber { background: #fef3dc; color: #854F0B; }
+  .tag-red { background: #fdeaea; color: #A32D2D; }
+  .tag-blue { background: #e6f1fb; color: #185FA5; }
+  .tag-purple { background: #eeedfe; color: #534AB7; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 1rem; }
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1rem; }
+  .step-num { min-width: 28px; height: 28px; border-radius: 50%; background: #1D9E75; color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-title { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .step-desc { font-size: 13px; color: #666; line-height: 1.5; margin-top: 2px; }
+  .divider { border: none; border-top: 1px solid #f0f0ec; margin: 1rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 9px 12px; border-bottom: 1.5px solid #e8e8e4; color: #888; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f0f0ec; color: #333; }
+  tr:last-child td { border-bottom: none; }
+  .quiz-btn { width: 100%; text-align: left; padding: 11px 14px; margin-bottom: 8px; border: 1.5px solid #e0e0e0; border-radius: 8px; background: #fff; color: #333; cursor: pointer; font-size: 14px; transition: all 0.15s; font-family: inherit; }
+  .quiz-btn:hover:not(:disabled) { border-color: #1D9E75; background: #f0faf6; }
+  .quiz-btn.correct { background: #e1f5ee; border-color: #1D9E75; color: #085041; font-weight: 500; }
+  .quiz-btn.wrong { background: #fdeaea; border-color: #e24b4a; color: #501313; }
+  .quiz-feedback { font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-top: 4px; display: none; line-height: 1.6; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #e1f5ee; color: #085041; }
+  .quiz-feedback.no { background: #fdeaea; color: #A32D2D; }
+  .q-block { margin-bottom: 2rem; }
+  .q-text { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 0.75rem; }
+  .chap-label { font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+  #score-box { background: #f0faf6; border: 1.5px solid #1D9E75; border-radius: 12px; padding: 1.5rem; margin-top: 1rem; text-align: center; display: none; }
+  #score-num { font-size: 32px; font-weight: 700; color: #0F6E56; }
+  #score-msg { font-size: 14px; color: #555; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Aktieanalys – Pluggmaterial</h1>
+    <p>Allt du behöver kunna för att göra en fundamental aktieanalys.</p>
+  </header>
+
+  <div class="chap-label">Välj kapitel</div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="show(0)">1. De tre rapporterna</button>
+    <button class="nav-btn" onclick="show(1)">2. Nyckeltal</button>
+    <button class="nav-btn" onclick="show(2)">3. Värdering</button>
+    <button class="nav-btn" onclick="show(3)">4. Kvalitativ analys</button>
+    <button class="nav-btn" onclick="show(4)">5. Mentala modeller</button>
+    <button class="nav-btn" onclick="show(5)">6. Quiz</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:17%"></div></div>
+
+  <!-- KAPITEL 1 -->
+  <div class="chapter active" id="ch0">
+    <h2>De tre finansiella rapporterna</h2>
+    <p class="subtitle">Grunden till all fundamental analys. Utan dessa kan du inte värdera ett bolag.</p>
+
+    <div class="card">
+      <span class="tag tag-blue">Rapport 1</span>
+      <h3>Resultaträkningen</h3>
+      <p>Visar hur mycket bolaget tjänar och vad det kostar att driva verksamheten under en period (kvartal eller år).</p>
+      <div class="formula">Omsättning − Kostnader = Rörelseresultat (EBIT)</div>
+      <div class="formula">EBIT − Räntor − Skatt = Nettoresultat</div>
+      <p style="margin-top:8px">Nyckelraden att kolla: <strong>rörelseresultatet (EBIT)</strong> – det berättar hur lönsam kärnverksamheten är, innan räntor och skatt påverkar.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Rapport 2</span>
+      <h3>Balansräkningen</h3>
+      <p>En ögonblicksbild av vad bolaget äger (tillgångar) och hur det är finansierat (skulder + eget kapital) på ett visst datum.</p>
+      <div class="formula">Tillgångar = Skulder + Eget kapital</div>
+      <p style="margin-top:8px">Kolla alltid: hur stor är skulden i förhållande till eget kapital? Hög skuldsättning = högre risk.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-green">Rapport 3</span>
+      <h3>Kassaflödesanalysen</h3>
+      <p>Visar hur mycket faktiska pengar som rör sig in och ut ur bolaget. Detta är den viktigaste rapporten – vinsten kan manipuleras, kassaflödet är svårare att fuska med.</p>
+      <div class="formula">Operativt kassaflöde − Investeringar = Fritt kassaflöde (FCF)</div>
+      <p style="margin-top:8px">Ett bolag kan visa vinst men ha negativt kassaflöde. Det är ett varningstecken.</p>
+    </div>
+
+    <div class="card">
+      <h3>Hur hänger de ihop?</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><div class="step-title">Resultaträkning</div><div class="step-desc">Visar vinsten för perioden. Vinsten påverkar eget kapital i balansräkningen.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><div class="step-title">Balansräkning</div><div class="step-desc">Visar bolagets tillgångar och hur de är finansierade. Kassan hämtas från kassaflödesanalysen.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><div class="step-title">Kassaflödesanalys</div><div class="step-desc">Förklarar förändringen i kassan mellan två perioder. Startar med nettoresultatet från resultaträkningen.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KAPITEL 2 -->
+  <div class="chapter" id="ch1">
+    <h2>Nyckeltal</h2>
+    <p class="subtitle">Nyckeltal hjälper dig jämföra bolag med varandra och med sig självt över tid.</p>
+
+    <div class="card">
+      <span class="tag tag-blue">Värdering</span>
+      <h3>P/E-tal – Price to Earnings</h3>
+      <div class="formula">P/E = Aktiekurs ÷ Vinst per aktie</div>
+      <p>Hur mycket betalar du per krona vinst? P/E 15 = du betalar 15 kr för varje krona bolaget tjänar per år.</p>
+      <p style="margin-top:8px;color:#888;font-size:13px">Normalt: 10–20 för mogna bolag. Högt P/E (30+) = marknaden prisar in stark tillväxt.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Värdering</span>
+      <h3>EV/EBIT</h3>
+      <div class="formula">EV = Börsvärde + Nettoskuld</div>
+      <div class="formula">EV/EBIT = EV ÷ Rörelseresultat</div>
+      <p>Bättre än P/E för att jämföra bolag med olika skuldsättning. Tar hänsyn till hela bolagets kostnad, inte bara aktiekursen.</p>
+      <p style="margin-top:8px;color:#888;font-size:13px">Under 10 = potentiellt billigt. Över 20 = dyrt om inte hög tillväxt motiverar det.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <span class="tag tag-green">Lönsamhet</span>
+        <h3>ROE</h3>
+        <div class="formula">ROE = Nettoresultat ÷ Eget kapital</div>
+        <p style="font-size:13px">Hur effektivt använder bolaget ägarnas kapital? Buffett vill se 15%+.</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-green">Lönsamhet</span>
+        <h3>Vinstmarginal</h3>
+        <div class="formula">Marginal = Nettoresultat ÷ Omsättning</div>
+        <p style="font-size:13px">Hur mycket av varje intjänad krona blir vinst? Jämför alltid mot branschsnittet.</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-amber">Finansiell hälsa</span>
+        <h3>Skuldsättningsgrad</h3>
+        <div class="formula">Skuld ÷ Eget kapital</div>
+        <p style="font-size:13px">Visar hur stor del av bolaget som är lånefinansierat. Under 1 = mer eget kapital än skulder.</p>
+      </div>
+      <div class="card">
+        <span class="tag tag-amber">Finansiell hälsa</span>
+        <h3>Direktavkastning</h3>
+        <div class="formula">Utdelning per aktie ÷ Aktiekurs</div>
+        <p style="font-size:13px">Hur mycket du får i utdelning i procent av vad du betalar för aktien.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Snabbguide – vad är bra?</h3>
+      <table>
+        <tr><th>Nyckeltal</th><th>Bra</th><th>Varningstecken</th></tr>
+        <tr><td>P/E</td><td>10–20 (mogna bolag)</td><td>Negativt eller 50+</td></tr>
+        <tr><td>EV/EBIT</td><td>Under 12</td><td>Över 25</td></tr>
+        <tr><td>ROE</td><td>15%+</td><td>Under 8%</td></tr>
+        <tr><td>Vinstmarginal</td><td>Beror på bransch</td><td>Krympande år för år</td></tr>
+        <tr><td>Skuldsättning</td><td>Under 1</td><td>Över 2 i cykliska bolag</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- KAPITEL 3 -->
+  <div class="chapter" id="ch2">
+    <h2>Värdering</h2>
+    <p class="subtitle">Hur räknar du ut vad ett bolag faktiskt är värt? Det finns två huvudmetoder.</p>
+
+    <div class="card">
+      <span class="tag tag-green">Metod 1</span>
+      <h3>DCF – Discounted Cash Flow</h3>
+      <p>Du prognostiserar framtida kassaflöden och räknar baklänges till vad de är värda idag. Bygger på principen att en krona idag är mer värd än en krona om 5 år.</p>
+      <div class="formula">Värde = FCF₁/(1+r)¹ + FCF₂/(1+r)² + ... + Terminalvärde</div>
+      <p style="margin-top:8px">Där <strong>r</strong> = diskonteringsräntan (ditt avkastningskrav, ofta 8–12%).</p>
+      <hr class="divider">
+      <p style="font-size:13px;color:#888">Fördel: tar hänsyn till framtida tillväxt. Nackdel: känslig för dina antaganden – små förändringar ger stora skillnader i slutvärdet.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Metod 2</span>
+      <h3>Relativvärdering</h3>
+      <p>Jämför bolagets nyckeltal mot konkurrenter i samma bransch. Om branschsnittet är EV/EBIT 14 och bolaget handlas till 8 – varför? Är det omotiverat billigt eller finns det en anledning?</p>
+      <hr class="divider">
+      <p style="font-size:13px;color:#888">Enklare och snabbare än DCF. Men fungerar dåligt om hela branschen är felvärderad.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Viktigt begrepp</span>
+      <h3>Margin of safety</h3>
+      <p>Köp bara när aktiekursen är klart lägre än ditt beräknade värde – minst 25–30% lägre. Det är din buffert för när du har fel (och det kommer du ha, ofta).</p>
+      <div class="formula">Kurs ≤ 70% av beräknat värde → köp</div>
+      <p style="margin-top:8px;font-size:13px;color:#888">Benjamin Graham uppfann konceptet. Warren Buffett kallar det de viktigaste tre orden inom investering.</p>
+    </div>
+
+    <div class="card">
+      <h3>Tre scenarios – gör alltid dessa</h3>
+      <div class="step">
+        <div class="step-num" style="background:#A32D2D">–</div>
+        <div><div class="step-title">Pessimistiskt scenario</div><div class="step-desc">Vad händer om det går sämre än väntat? Vad är aktien värd då? Är du ok med det?</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num">≈</div>
+        <div><div class="step-title">Normalt scenario</div><div class="step-desc">Ditt basfall. Vad är bolaget värt om det utvecklas som förväntat?</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:#0F6E56">+</div>
+        <div><div class="step-title">Optimistiskt scenario</div><div class="step-desc">Om allt går bra – hur stor är uppsidan? Är det värt risken?</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KAPITEL 4 -->
+  <div class="chapter" id="ch3">
+    <h2>Kvalitativ analys</h2>
+    <p class="subtitle">Siffrorna berättar vad som hänt. Den kvalitativa analysen berättar varför – och vad som händer härnäst.</p>
+
+    <div class="card">
+      <span class="tag tag-green">Viktigast</span>
+      <h3>Konkurrensfördel (economic moat)</h3>
+      <p>Vad hindrar konkurrenter från att ta marknadsandelar? Ett bolag utan moat tvingas alltid konkurrera på pris – marginaler pressas.</p>
+      <hr class="divider">
+      <div class="step">
+        <div class="step-num" style="background:#534AB7">1</div>
+        <div><div class="step-title">Varumärke</div><div class="step-desc">Kunder betalar mer för märket. Ex: Apple, Ferrari, Coca-Cola.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:#534AB7">2</div>
+        <div><div class="step-title">Nätverkseffekter</div><div class="step-desc">Produkten blir bättre ju fler som använder den. Ex: Visa, Spotify, LinkedIn.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:#534AB7">3</div>
+        <div><div class="step-title">Byteskostnader</div><div class="step-desc">Det kostar tid/pengar att byta leverantör. Ex: affärssystem, banker, appar.</div></div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:#534AB7">4</div>
+        <div><div class="step-title">Skalfördelar</div><div class="step-desc">Större volym = lägre kostnad per enhet. Ex: Amazon, Costco.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Ledning & ägare</span>
+      <h3>Vem styr bolaget?</h3>
+      <p>Bra ledning allokerar kapital klokt – investerar när det är lönsamt, köper tillbaka aktier när de är billiga, avstår dåliga förvärv.</p>
+      <hr class="divider">
+      <p style="font-size:13px">Frågor att ställa: Äger ledningen aktier i bolaget? Håller de vad de lovar i rapporter? Hur kommunicerar de dåliga nyheter?</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Affärsmodell</span>
+      <h3>Hur tjänar bolaget pengar?</h3>
+      <p>Du ska kunna förklara affärsmodellen på två meningar. Om du inte kan det – förstår du inte bolaget tillräckligt för att investera.</p>
+      <hr class="divider">
+      <p style="font-size:13px;color:#888">Recurring revenue (återkommande intäkter) är mer värdefullt än engångsförsäljning. Prenumerationsmodeller, SaaS och servicekontrakt är exempel.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-red">Risker</span>
+      <h3>Vad kan gå fel?</h3>
+      <p>Lista aktivt anledningar att inte köpa. De flesta amatörer gör tvärtom – de letar bekräftelse på att de har rätt.</p>
+      <hr class="divider">
+      <p style="font-size:13px">Vanliga risker: teknologiskifte (Kodak), ny konkurrent, regulatorisk förändring, nyckelperson lämnar, skuldbörda vid ränteuppgång.</p>
+    </div>
+  </div>
+
+  <!-- KAPITEL 5 -->
+  <div class="chapter" id="ch4">
+    <h2>Mentala modeller</h2>
+    <p class="subtitle">Det som skiljer bra investerare från alla andra. Teknisk kunskap kan alla lära sig – detta är svårare.</p>
+
+    <div class="card">
+      <span class="tag tag-green">Buffett / Graham</span>
+      <h3>Mr. Market</h3>
+      <p>Tänk dig att du har en partner som heter Mr. Market. Varje dag erbjuder han att köpa eller sälja aktier till ett visst pris. Ibland är han euforisk och sätter för höga priser. Ibland är han deprimerad och säljer för billigt.</p>
+      <p style="margin-top:8px">Din uppgift: utnyttja honom när han är irrationell. Inte följa hans humör.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Buffett / Munger</span>
+      <h3>Circle of competence</h3>
+      <p>Investera bara i bolag vars verksamhet du faktiskt förstår. Det spelar ingen roll hur "het" en aktie verkar – om du inte förstår hur de tjänar pengar, äger du inte en aktie, du spelar lotteri.</p>
+      <div class="formula">"Never invest in a business you cannot understand." – Buffett</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-amber">Graham</span>
+      <h3>Margin of safety som tankesätt</h3>
+      <p>Du kommer alltid ha fel om vissa antaganden. Bygg in en felmarginal i varje beslut. Köp bara när priset är klart under värdet. Det skyddar dig mot misstag och oväntade händelser.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-blue">Psykologi</span>
+      <h3>Bekräftelsebias</h3>
+      <p>Hjärnan letar automatiskt efter information som bekräftar vad vi redan tror. När du analyserat ett bolag och gillar det – börjar du omedvetet ignorera negativ information.</p>
+      <p style="margin-top:8px">Motmedlet: skriv aktivt ner alla anledningar att INTE köpa innan du bestämmer dig.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-red">Psykologi</span>
+      <h3>Dispositionseffekten</h3>
+      <p>Vi säljer vinnare för tidigt (för att "låsa in vinsten") och håller förlorare för länge (för att "inte realisera förlusten"). Det är exakt bakvänt mot vad du bör göra.</p>
+      <div class="formula">Sälj när tesen är bruten – inte när kursen gått ner</div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag-green">Munger</span>
+      <h3>Inversionstänkande</h3>
+      <p>Istället för att fråga "hur tjänar jag pengar på det här?" – fråga "vad skulle förstöra det här bolaget?" och "hur undviker jag att ha fel?". Många problem löses enklare baklänges.</p>
+    </div>
+  </div>
+
+  <!-- KAPITEL 6: QUIZ -->
+  <div class="chapter" id="ch5">
+    <h2>Quiz – testa dig själv</h2>
+    <p class="subtitle">10 frågor som täcker allt du läst. Klicka på rätt svar.</p>
+
+    <div class="q-block">
+      <div class="q-text">1. Vilken finansiell rapport är svårast att manipulera?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q1')">Resultaträkningen</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q1')">Balansräkningen</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q1')">Kassaflödesanalysen</button>
+      <div class="quiz-feedback" id="q1">Kassaflödet visar faktiska pengarörelser och är svårare att påverka med bokföringstekniker än vinsten.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">2. Vad mäter ROE?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q2')">Bolagets skuldsättning</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q2')">Hur effektivt bolaget använder ägarnas kapital</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q2')">Aktiekursen i förhållande till vinsten</button>
+      <div class="quiz-feedback" id="q2">ROE = Nettoresultat ÷ Eget kapital. Buffett vill se 15%+ konsekvent.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">3. Varför är EV/EBIT bättre än P/E när man jämför bolag?</div>
+      <button class="quiz-btn" onclick="ans(this,true,'q3')">EV tar hänsyn till skulder och kassa, inte bara börsvärdet</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q3')">EV/EBIT är alltid lägre och därmed lättare att tolka</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q3')">P/E är svårare att beräkna</button>
+      <div class="quiz-feedback" id="q3">Två bolag med samma vinst kan se olika dyra ut på P/E om det ena är skuldsatt. EV löser det.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">4. Vad är margin of safety?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q4')">Att köpa dyra bolag för att de är "säkra"</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q4')">Att diversifiera i 30+ bolag</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q4')">Att köpa klart under beräknat värde som buffert för misstag</button>
+      <div class="quiz-feedback" id="q4">Graham uppfann konceptet. Om du köper 30% under värdet och har fel – skyddar felmarginalen dig.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">5. Vad är en "economic moat"?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q5')">En bolagets skuldfria balansräkning</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q5')">En konkurrensfördel som skyddar bolaget från konkurrenter</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q5')">Ett högt P/E-tal som signalerar tillväxt</button>
+      <div class="quiz-feedback" id="q5">Varumärke, nätverkseffekter, byteskostnader och skalfördelar är exempel på moats.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">6. Du äger en aktie som fallit 25%. Tesen håller fortfarande. Vad gör du?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q6')">Säljer för att begränsa förlusten</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q6')">Håller kvar – eller köper mer om priset nu är ännu bättre</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q6')">Väntar och ser vad som händer utan att göra något</button>
+      <div class="quiz-feedback" id="q6">Om tesen är intakt har kursfallet gjort aktien billigare, inte sämre. Sälj bara om tesen förändrats.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">7. Vad är fritt kassaflöde (FCF)?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q7')">Nettoresultatet efter skatt</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q7')">Operativt kassaflöde minus investeringar</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q7')">Omsättning minus rörelsekostnader</button>
+      <div class="quiz-feedback" id="q7">FCF = vad som faktiskt blir över till aktieägarna efter att bolaget investerat i sin verksamhet.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">8. Vad innebär bekräftelsebias i investering?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q8')">Att du köper bolag som bekräftats av analytiker</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q8')">Att du omedvetet letar information som stödjer din redan fattade åsikt</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q8')">Att du bara investerar i bolag du känner till sedan tidigare</button>
+      <div class="quiz-feedback" id="q8">Motmedlet: skriv aktivt ner bearcase (anledningar att inte köpa) innan du bestämmer dig.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">9. Vad säger balansräkningens grundekvation?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q9')">Omsättning = Kostnader + Vinst</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q9')">Tillgångar = Skulder + Eget kapital</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q9')">Kassaflöde = Vinst + Avskrivningar</button>
+      <div class="quiz-feedback" id="q9">Det är den grundläggande bokföringsidentiteten. Stämmer alltid – annars är något fel i redovisningen.</div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-text">10. Vad är DCF-metoden?</div>
+      <button class="quiz-btn" onclick="ans(this,false,'q10')">Att jämföra ett bolags nyckeltal mot konkurrenter</button>
+      <button class="quiz-btn" onclick="ans(this,false,'q10')">Att analysera aktiekursens historiska rörelser</button>
+      <button class="quiz-btn" onclick="ans(this,true,'q10')">Att diskontera framtida kassaflöden till dagens värde</button>
+      <div class="quiz-feedback" id="q10">DCF = Discounted Cash Flow. Du prognostiserar framtida FCF och räknar vad de är värda idag med en diskonteringsränta.</div>
+    </div>
+
+    <div id="score-box">
+      <div id="score-num"></div>
+      <div id="score-msg"></div>
+      <button onclick="resetQuiz()" style="margin-top:1rem;padding:10px 24px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;">Starta om quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const chapters = document.querySelectorAll('.chapter');
+const btns = document.querySelectorAll('.nav-btn');
+const prog = document.getElementById('prog');
+
+function show(i) {
+  chapters.forEach(c => c.classList.remove('active'));
+  btns.forEach(b => b.classList.remove('active'));
+  chapters[i].classList.add('active');
+  btns[i].classList.add('active');
+  prog.style.width = Math.round(((i+1)/chapters.length)*100) + '%';
+  window.scrollTo(0, 0);
+}
+
+let answered = {};
+let correct = 0;
+
+function resetQuiz() {
+  answered = {};
+  correct = 0;
+  document.querySelectorAll('.quiz-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.quiz-feedback').forEach(f => {
+    f.classList.remove('show','ok','no');
+  });
+  document.getElementById('score-box').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
+function ans(btn, isCorrect, qid) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const fb = document.getElementById(qid);
+  const allBtns = btn.parentElement.querySelectorAll('.quiz-btn');
+  allBtns.forEach(b => b.disabled = true);
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.classList.add('ok', 'show');
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    fb.classList.add('no', 'show');
+    allBtns.forEach(b => { if (b.onclick.toString().includes('true')) b.classList.add('correct'); });
+  }
+  if (Object.keys(answered).length === 10) {
+    const box = document.getElementById('score-box');
+    box.style.display = 'block';
+    document.getElementById('score-num').textContent = correct + '/10 rätt';
+    const msgs = ['Repetera materialet från början – det sätter sig med tid.','Halvvägs – gå tillbaka och läs kapitlena igen.','Bra jobbat – repetera de du missade.','Utmärkt! Du har grunden riktigt bra.'];
+    document.getElementById('score-msg').textContent = correct >= 9 ? msgs[3] : correct >= 7 ? msgs[2] : correct >= 5 ? msgs[1] : msgs[0];
+  }
+}
+</script>
+</body>
+</html>
